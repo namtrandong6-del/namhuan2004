@@ -1,3 +1,6 @@
+git init
 git add -A
 git commit -m "mô tả thay đổi"
+git branch -M main
+git remote add origin https://github.com/Tên_Của_Bạn/Tên_Repo_Của_Bạn.git
 git push

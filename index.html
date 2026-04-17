@@ -78,14 +78,40 @@
         }
     </script>
     <link rel="stylesheet" href="style/style.css"/>
+    <style>
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(30px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+        .input-glass {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .input-glass:focus {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1), inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+    </style>
 </head>
-<body class="bg-surface text-on-surface min-h-screen flex items-center justify-center p-6 selection:bg-primary/20">
+<body class="bg-surface text-on-surface min-h-screen flex items-center justify-center p-6 selection:bg-primary/20 relative">
 
     <!-- Toast Container -->
     <div id="toast" class="toast"></div>
 
     <!-- Login Container -->
-    <main class="w-full max-w-[480px] flex flex-col items-center">
+    <main class="w-full max-w-[480px] flex flex-col items-center animate-fade-in-up relative z-10">
         <!-- Logo & Branding Section -->
         <div class="mb-12 text-center">
             <div class="inline-flex items-center justify-center p-4 bg-primary-fixed-dim/20 rounded-xl mb-6">
@@ -97,11 +123,11 @@
         </div>
 
         <!-- Auth Card -->
-        <div class="w-full bg-surface-container-lowest p-8 md:p-10 rounded-xl shadow-[0px_12px_32px_rgba(25,28,30,0.04)] border border-outline-variant/10">
+        <div class="w-full glass-card p-8 md:p-10 rounded-2xl transition-all duration-500 hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)]">
             <div class="space-y-6">
                 <!-- Login with GitHub Button -->
-                <button id="btn-github" onclick="loginWithGithub()" class="w-full flex items-center justify-center gap-4 bg-surface-container-lowest border border-outline-variant py-4 px-6 rounded-lg hover:bg-surface-container-low transition-all duration-200 group active:scale-[0.98]">
-                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <button id="btn-github" onclick="loginWithGithub()" class="w-full flex items-center justify-center gap-4 bg-white/80 border border-outline-variant/40 py-4 px-6 rounded-xl hover:bg-white transition-all duration-300 group hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]">
+                    <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
                     </svg>
                     <span class="text-on-surface font-semibold text-lg">Đăng nhập bằng GitHub</span>
@@ -118,13 +144,13 @@
                 <form id="login-form" class="space-y-4">
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold tracking-wider uppercase text-on-surface-variant ml-1">Email</label>
-                        <input id="email" class="w-full bg-surface-container-low border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline transition-all" placeholder="example@email.com" type="email" required/>
+                        <input id="email" class="w-full input-glass rounded-xl py-3.5 px-4 text-on-surface placeholder:text-outline transition-all duration-300 outline-none" placeholder="example@email.com" type="email" required/>
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold tracking-wider uppercase text-on-surface-variant ml-1">Mật khẩu</label>
-                        <input id="password" class="w-full bg-surface-container-low border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline transition-all" placeholder="••••••••" type="password" required minlength="6"/>
+                        <input id="password" class="w-full input-glass rounded-xl py-3.5 px-4 text-on-surface placeholder:text-outline transition-all duration-300 outline-none" placeholder="••••••••" type="password" required minlength="6"/>
                     </div>
-                    <button id="btn-login" type="submit" class="w-full bg-primary text-on-primary py-4 px-6 rounded-sm font-bold text-base hover:bg-primary-container transition-all active:scale-[0.98] shadow-sm flex items-center justify-center gap-2">
+                    <button id="btn-login" type="submit" class="w-full bg-primary text-white py-4 px-6 rounded-xl font-bold text-base hover:bg-primary-container hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2 mt-2">
                         <span id="btn-login-text">Đăng nhập</span>
                         <div id="btn-login-spinner" class="spinner hidden"></div>
                     </button>
@@ -158,14 +184,137 @@
         </div>
     </main>
 
-    <!-- Background Decoration -->
+    <!-- Dynamic 120fps Canvas Background -->
     <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-fixed-dim/10 blur-[120px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] rounded-full bg-tertiary-fixed-dim/5 blur-[100px]"></div>
-        <div class="absolute top-[20%] right-[5%] w-[20%] h-[20%] rounded-full bg-secondary-fixed/5 blur-[80px]"></div>
+        <canvas id="bg-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-surface/80 backdrop-blur-[1px]"></div>
     </div>
 
     <script>
+        // ============================================
+        // 120FPS Network Particle Background
+        // ============================================
+        (function() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d', { alpha: true });
+            let width, height;
+            let particles = [];
+            const connectionDistance = 180;
+            const mouse = { x: null, y: null, radius: 250 };
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                ctx.scale(dpr, dpr);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.8;
+                    this.vy = (Math.random() - 0.5) * 0.8;
+                    this.baseRadius = Math.random() * 2 + 1;
+                    this.radius = this.baseRadius;
+                    const colors = ['#2563eb', '#007d55', '#004ac6'];
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                }
+
+                update() {
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (mouse.x != null) {
+                        const dx = mouse.x - this.x;
+                        const dy = mouse.y - this.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < mouse.radius) {
+                            const force = (mouse.radius - distance) / mouse.radius;
+                            const forceDirectionX = dx / distance;
+                            const forceDirectionY = dy / distance;
+                            this.x -= forceDirectionX * force * 1.5;
+                            this.y -= forceDirectionY * force * 1.5;
+                            this.radius = this.baseRadius + (force * 3);
+                        } else {
+                            this.radius = this.baseRadius;
+                        }
+                    } else {
+                        this.radius = this.baseRadius;
+                    }
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                const particleCount = Math.min(Math.floor((width * height) / 9000), 150);
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            initParticles();
+
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(initParticles, 200);
+            });
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < connectionDistance) {
+                            ctx.beginPath();
+                            const opacity = 1 - (dist / connectionDistance);
+                            ctx.strokeStyle = `rgba(37, 99, 235, ${opacity * 0.25})`;
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        })();
+
         // ============================================
         // Supabase Init (inline)
         // ============================================
