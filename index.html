@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Đăng nhập - Personal Task Kanban</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#eceef0",
+                        "tertiary-container": "#007d55",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-tertiary-fixed": "#002113",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-primary-fixed": "#00174b",
+                        "on-surface-variant": "#434655",
+                        "secondary": "#505f76",
+                        "on-background": "#191c1e",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "outline-variant": "#c3c6d7",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "inverse-primary": "#b4c5ff",
+                        "primary-container": "#2563eb",
+                        "on-secondary-container": "#54647a",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#bdffdb",
+                        "on-surface": "#191c1e",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-container": "#d0e1fb",
+                        "error-container": "#ffdad6",
+                        "primary": "#004ac6",
+                        "surface": "#f7f9fb",
+                        "surface-tint": "#0053db",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "background": "#f7f9fb",
+                        "on-primary-container": "#eeefff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "outline": "#737686",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary": "#006242",
+                        "tertiary-fixed": "#6ffbbe",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="style/style.css"/>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex items-center justify-center p-6 selection:bg-primary/20">
+
+    <!-- Toast Container -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Login Container -->
+    <main class="w-full max-w-[480px] flex flex-col items-center">
+        <!-- Logo & Branding Section -->
+        <div class="mb-12 text-center">
+            <div class="inline-flex items-center justify-center p-4 bg-primary-fixed-dim/20 rounded-xl mb-6">
+                <span class="material-symbols-outlined text-primary text-4xl">view_kanban</span>
+            </div>
+            <h1 class="text-4xl font-extrabold tracking-tight text-on-surface mb-3 leading-tight">
+                Personal Task Kanban
+            </h1>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="w-full bg-surface-container-lowest p-8 md:p-10 rounded-xl shadow-[0px_12px_32px_rgba(25,28,30,0.04)] border border-outline-variant/10">
+            <div class="space-y-6">
+                <!-- Login with GitHub Button -->
+                <button id="btn-github" onclick="loginWithGithub()" class="w-full flex items-center justify-center gap-4 bg-surface-container-lowest border border-outline-variant py-4 px-6 rounded-lg hover:bg-surface-container-low transition-all duration-200 group active:scale-[0.98]">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    <span class="text-on-surface font-semibold text-lg">Đăng nhập bằng GitHub</span>
+                </button>
+
+                <!-- Separator -->
+                <div class="relative flex items-center py-2">
+                    <div class="flex-grow border-t border-outline-variant/30"></div>
+                    <span class="flex-shrink mx-4 text-on-surface-variant text-xs font-bold tracking-widest uppercase">Hoặc sử dụng</span>
+                    <div class="flex-grow border-t border-outline-variant/30"></div>
+                </div>
+
+                <!-- Email/Password Login -->
+                <form id="login-form" class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold tracking-wider uppercase text-on-surface-variant ml-1">Email</label>
+                        <input id="email" class="w-full bg-surface-container-low border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline transition-all" placeholder="example@email.com" type="email" required/>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold tracking-wider uppercase text-on-surface-variant ml-1">Mật khẩu</label>
+                        <input id="password" class="w-full bg-surface-container-low border-0 rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-outline transition-all" placeholder="••••••••" type="password" required minlength="6"/>
+                    </div>
+                    <button id="btn-login" type="submit" class="w-full bg-primary text-on-primary py-4 px-6 rounded-sm font-bold text-base hover:bg-primary-container transition-all active:scale-[0.98] shadow-sm flex items-center justify-center gap-2">
+                        <span id="btn-login-text">Đăng nhập</span>
+                        <div id="btn-login-spinner" class="spinner hidden"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Footer Links -->
+            <div class="mt-10 flex flex-col items-center gap-4 text-sm">
+                <a class="text-primary font-semibold hover:underline decoration-2 underline-offset-4" href="#">Quên mật khẩu?</a>
+                <p class="text-on-surface-variant">
+                    Chưa có tài khoản?
+                    <a class="text-primary font-semibold hover:underline decoration-2 underline-offset-4 ml-1" href="login/resign.html">Đăng ký ngay</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="mt-16 grid grid-cols-3 gap-8 w-full">
+            <div class="flex flex-col items-center text-center">
+                <span class="material-symbols-outlined text-secondary text-2xl mb-2">security</span>
+                <span class="text-[10px] font-bold tracking-tighter uppercase text-on-surface-variant">Bảo mật SSL</span>
+            </div>
+            <div class="flex flex-col items-center text-center">
+                <span class="material-symbols-outlined text-secondary text-2xl mb-2">cloud_sync</span>
+                <span class="text-[10px] font-bold tracking-tighter uppercase text-on-surface-variant">Đồng bộ đám mây</span>
+            </div>
+            <div class="flex flex-col items-center text-center">
+                <span class="material-symbols-outlined text-secondary text-2xl mb-2">devices</span>
+                <span class="text-[10px] font-bold tracking-tighter uppercase text-on-surface-variant">Đa nền tảng</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Background Decoration -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-fixed-dim/10 blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] rounded-full bg-tertiary-fixed-dim/5 blur-[100px]"></div>
+        <div class="absolute top-[20%] right-[5%] w-[20%] h-[20%] rounded-full bg-secondary-fixed/5 blur-[80px]"></div>
+    </div>
+
+    <script>
+        // ============================================
+        // Supabase Init (inline)
+        // ============================================
+        const SUPABASE_URL = 'https://gaattdmfuyxnaofspfvy.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhYXR0ZG1mdXl4bmFvZnNwZnZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMDUxOTYsImV4cCI6MjA5MTg4MTE5Nn0.IOb6H2BofMFr14S-fjV8AANSNef-3zlEwRfenbNES10';
+
+        let _supabase;
+        try {
+            _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase connected');
+        } catch (err) {
+            console.error('❌ Supabase init failed:', err);
+        }
+
+        // ============================================
+        // Toast
+        // ============================================
+        function showToast(message, type) {
+            type = type || 'success';
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            requestAnimationFrame(function() { toast.classList.add('show'); });
+            setTimeout(function() { toast.classList.remove('show'); }, 3500);
+        }
+
+        // ============================================
+        // Loading
+        // ============================================
+        function setLoading(loading) {
+            var text = document.getElementById('btn-login-text');
+            var spinner = document.getElementById('btn-login-spinner');
+            var btn = document.getElementById('btn-login');
+            if (loading) {
+                text.textContent = 'Đang xử lý...';
+                text.classList.add('opacity-50');
+                spinner.classList.remove('hidden');
+                btn.disabled = true;
+            } else {
+                text.textContent = 'Đăng nhập';
+                text.classList.remove('opacity-50');
+                spinner.classList.add('hidden');
+                btn.disabled = false;
+            }
+        }
+
+        // ============================================
+        // Email Login
+        // ============================================
+        async function loginWithEmail() {
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showToast('Vui lòng nhập đầy đủ email và mật khẩu!', 'error');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                var result = await _supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                setLoading(false);
+
+                if (result.error) {
+                    console.error('Login error:', result.error);
+                    if (result.error.message.includes('Invalid login credentials')) {
+                        showToast('Email hoặc mật khẩu không đúng!', 'error');
+                    } else if (result.error.message.includes('Email not confirmed')) {
+                        showToast('Vui lòng xác nhận email trước khi đăng nhập!', 'error');
+                    } else {
+                        showToast('Lỗi: ' + result.error.message, 'error');
+                    }
+                    return;
+                }
+
+                console.log('✅ Login success:', result.data.user.email);
+                showToast('Đăng nhập thành công! Đang chuyển hướng...', 'success');
+                setTimeout(function() {
+                    window.location.href = 'dashboard/dashboard.html';
+                }, 1000);
+
+            } catch (err) {
+                setLoading(false);
+                console.error('Unexpected error:', err);
+                showToast('Lỗi không xác định! Vui lòng thử lại.', 'error');
+            }
+        }
+
+        // ============================================
+        // GitHub Login
+        // ============================================
+        async function loginWithGithub() {
+            try {
+                var result = await _supabase.auth.signInWithOAuth({
+                    provider: 'github',
+                    options: {
+                        redirectTo: window.location.origin + '/dashboard/dashboard.html'
+                    }
+                });
+                if (result.error) {
+                    showToast('Lỗi đăng nhập GitHub: ' + result.error.message, 'error');
+                }
+            } catch (err) {
+                console.error('GitHub login error:', err);
+                showToast('Lỗi kết nối GitHub!', 'error');
+            }
+        }
+
+        // ============================================
+        // Form Submit Handler
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementById('login-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('📝 Login form submitted');
+                    loginWithEmail();
+                });
+                console.log('✅ Login form listener attached');
+            }
+
+            // Check if already logged in
+            (async function() {
+                try {
+                    var result = await _supabase.auth.getUser();
+                    if (result.data && result.data.user) {
+                        console.log('Already logged in, redirecting...');
+                        window.location.href = 'dashboard/dashboard.html';
+                    }
+                } catch (err) {
+                    console.log('Not logged in');
+                }
+            })();
+        });
+    </script>
+</body>
+</html>
